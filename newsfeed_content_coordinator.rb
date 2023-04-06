@@ -1,4 +1,5 @@
 require 'bundler/setup'
+Bundler.require
 
 class NewsfeedContentCoordinator
   attr_reader :user_id, :redis

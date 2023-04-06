@@ -1,12 +1,10 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    connection_pool (2.4.0)
     diff-lcs (1.5.0)
-    redis (5.0.6)
-      redis-client (>= 0.9.0)
-    redis-client (0.14.1)
-      connection_pool
+    fakeredis (0.8.0)
+      redis (~> 4.1)
+    redis (4.8.1)
     rspec (3.12.0)
       rspec-core (~> 3.12.0)
       rspec-expectations (~> 3.12.0)
@@ -25,6 +23,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  fakeredis (= 0.8.0)
   redis
   rspec
 

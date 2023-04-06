@@ -1,14 +1,15 @@
 require 'bundler/setup'
+Bundler.require(:test)
 require_relative '../newsfeed_content_coordinator'
 
 RSpec.describe NewsfeedContentCoordinator do
-  let(:user) { create(:user) }
+  let(:user_id) { 1234 }
   let(:redis) { Redis.new }
-  let(:coordinator) { NewsfeedContentCoordinator.new(user.id, redis) }
+  let(:coordinator) { NewsfeedContentCoordinator.new(user_id, redis) }
 
   describe "#initialize" do
     it "should initialize the coordinator with a user ID and a Redis instance" do
-      expect(coordinator.user_id).to eq(user.id)
+      expect(coordinator.user_id).to eq(user_id)
       expect(coordinator.redis).to be_an_instance_of(Redis)
     end
   end
@@ -35,6 +36,7 @@ RSpec.describe NewsfeedContentCoordinator do
   describe "#request_newsfeed_content" do
     before do
       allow(coordinator).to receive(:generate_newsfeed_content).and_return("sample content")
+      # TODO: stubbing in this way throws off the test because `generate_content_on_login` calls it
     end
 
     context "when the SPA requests newsfeed content" do
@@ -84,6 +86,7 @@ RSpec.describe NewsfeedContentCoordinator do
         before do
           # Simulate content generation taking 4 seconds
           allow(coordinator).to receive(:generate_newsfeed_content) { sleep 4; "slow content" }
+          # TODO: stubbing in this way throws off the test because `generate_content_on_login` calls it
         end
 
         it "should give up waiting for the content after 3 seconds" do
@@ -131,7 +134,7 @@ RSpec.describe NewsfeedContentCoordinator do
 
   describe "#cache_key" do
     it "should generate a unique cache key based on the user ID" do
-      expect(coordinator.cache_key).to eq("newsfeed_content:#{user.id}")
+      expect(coordinator.cache_key).to eq("newsfeed_content:#{user_id}")
     end
   end
 
